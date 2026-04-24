@@ -1,0 +1,93 @@
+/* 上部レイアウト */
+.top-bar{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:20px 30px;
+}
+
+/* 三本線メニュー */
+.menu-btn{
+  font-size:35px;
+  background:none;
+  border:none;
+  cursor:pointer;
+  width:auto;
+}
+
+/* ログアウトボタン */
+.logout-btn{
+  width:auto;
+  padding:12px 20px;
+  background:black;
+  color:white;
+  border:none;
+  border-radius:10px;
+}
+button:hover{
+  background-color: rgb(228, 27, 27);
+}
+
+/* フォーム*/
+.form-box{
+  width:640px;
+  margin:100px auto;
+  padding:120px;
+  background:white;
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* タイトル*/
+h1{
+  font-size:50px;
+  color:#333;
+  margin-bottom:40px;
+  text-align:center;
+}
+
+/* 質問文 */
+.question{
+  font-size:30px;
+  font-weight:bold;
+  margin-bottom:50px;
+}
+
+/* Yes, No ボックス */
+.radio-box{
+  width:100%;
+  padding:18px;
+  border:3px solid #000;
+  border-radius:5px;
+  font-size:28px;
+  text-align:center;
+  margin-bottom:30px;
+  cursor:pointer;
+}
+
+/* ホバー */
+.radio-box:hover{
+  border-color:#03cae4e5;
+}
+
+/* ラジオボタン */
+.radio-box input{
+  width:auto;
+  margin-right:10px;
+}
+
+/* 送信ボタン*/
+button[type="submit"]{
+  width:100%;
+  padding:18px;
+  background:#4CAF50;
+  color:white;
+  font-size:28px;
+  border:none;
+  border-radius:5px;
+  margin-top:30px;
+}
