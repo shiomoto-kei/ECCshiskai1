@@ -2,40 +2,40 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>安否確認</title>
-<link rel="stylesheet" href="./css/chosescreen2.css">
+<link rel="stylesheet" href="chosescreen2.css">
 </head>
+
 <body>
-
-<div class="top-bar">
-
-
-    <button class="menu-btn">☰</button>
-
-    <button class="logout-btn" onclick="location.href='loginscreen1.html'">
-        Logout
-    </button>
-
-</div>
 
 <div class="form-box">
 
-    <h1>安否確認</h1>
+    <div class="top-bar">
+        <button class="menu-btn">☰</button>
+       <button class="logout-btn" onclick="location.href='loginscreen1.html'">
+    logout
+</button>
+    </div>
 
-    <p class="question">
-        被害に遭われましたか？
-    </p>
-
-    <label class="radio-box">
-        <input type="radio" name="status">
-        Yes
-    </label>
+    <h1>株式会社の安否確認</h1>
 
     <label class="radio-box">
-        <input type="radio" name="status">
-        No
+        <input type="radio" name="safe">
+        YES
     </label>
+
+    
+    <textarea class="memo"
+    placeholder="詳細内容を入力してください"></textarea>
+
+    <label class="radio-box">
+        <input type="radio" name="safe">
+        NO
+    </label>
+
+    <textarea class="memo"
+    placeholder="詳細内容を入力してください"></textarea>
 
     <button type="submit">送信</button>
 
