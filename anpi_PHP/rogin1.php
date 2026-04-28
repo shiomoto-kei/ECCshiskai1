@@ -8,29 +8,33 @@ session_start();
 $input_id=$_POST['user_id']??"";
 $input_pass=$_POST['user_pass']??"";
 
+
 if(!empty($input_id) && !empty($input_pass)){
     try{
+
         //SQL分 [:id]の部分はあとでもらってきたIDが入る
-        $sql=db->prepare("SECT * FROM userid WHRE id = :id");
+        $sql=$db->prepare("SELECT * FROM employee WHERE emp_no = :id");
          
         //ここでさっきの[:id]に[$inpot_id]が入る
         $stmt->bindparam(':id',$inpot_id);
         $stmt->execute();
-        $userid=$stmt->fetch();
-        if($userid){
+        $user=$stmt->fetch();
+        if($user){
             //ここで入力されたユーザーID と、それに紐づけているパスワードが等しいかの判定。
-            if(password_verify($input_pass,$userid['user_pass'])){
+            if(password_verify($input_pass,$user['password_hash'])){
 
-
+         $hash =password_hash($input_pass);  
+if($user['emp_no']==$inpot_id && $user['password_hash']===$hash)
             //もし管理者IDだったら遷移先を変更
-                if($userid===$MASTERID){
-                    $_SESSION['ID']=$userid;
-                 header('Location: $MASTER.php');
+                if($user['position']===1){
+                    $_SESSION['ID']=$user['emp_no'];
+                 header('Location: itiran.php');
                 exit;
-                }
-                $_SESSION['ID']=$userid;
+                }else{
+                $_SESSION['ID']=$user['emp_no'];
                 header('Location: mypage.php');
                 exit;
+                }
             }
         }
 
