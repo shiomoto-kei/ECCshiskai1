@@ -78,7 +78,7 @@ button:hover[value="login"]{
 }
 
 
-/*adminとしてログイン*/
+/* adminとしてログイン
 button[value="admin"]{
   margin-top: 20px;
   background-color: #181313;
@@ -86,4 +86,4 @@ button[value="admin"]{
 }
 button:hover[value="admin"]{
   background-color: #616461;
-}
+} */
