@@ -7,12 +7,18 @@ $syousaiID=$_SESSION['syousaiID'];
  try{
 
         //SQL分 [:id]の部分はあとでもらってきたIDが入る
-        $sql=db->prepare("SELECT * FROM user WHRE user_id = :id");
+        $sql=$db->prepare("SELECT * FROM employee WHERE emp_no = :id");
+
         
         //ここでさっきの[:id]に[$syousaiID]が入る
         $stmt->bindparam(':id',$syousaiID);
         $stmt->execute();
         $usersyousai=$stmt->fetchall();
+
+        $sql_posi=$db->prepare("SELECT * FROM position  WHERE position_no = :posi");
+          $stmt->bindparam('posi', $syousaiID['position']);
+        $stmt->execute();
+        $user_posi=$stmt->fetchall();
 
         
 
@@ -39,13 +45,16 @@ $syousaiID=$_SESSION['syousaiID'];
 
  <?php if (!empty($syousaiID)): ?>
 <tr>
-    <td><?php echo $syousaiID[''] ?></td> 
-    <td><?php echo $syousaiID[''] ?></td> 
-    <td><?php echo $syousaiID[''] ?></td> 
-    <td><?php echo $syousaiID[''] ?></td> 
-    <td><?php echo $syousaiID[''] ?></td> 
-    <td><?php echo $syousaiID[''] ?></td> 
-    <td><?php echo $syousaiID[''] ?></td>
+    <td><?php echo $syousaiID['emp_no'] ?></td> 
+    <td><?php echo $syousaiID['password_hash'] ?></td> 
+    <td><?php echo $syousaiID['ename'] ?></td> 
+    <td><?php echo $syousaiID['birthday'] ?></td> 
+    <td><?php echo $syousaiID['tel'] ?></td> 
+    <td><?php echo $syousaiID['address'] ?></td> 
+    <td><?php echo $user_posi['pname'] ?></td>
+    <td><?php echo $syousaiID['section'] ?></td>
+    <td><?php echo $syousaiID['image_path'] ?></td>
+   
 </tr>
 <?php endif; ?>
 
