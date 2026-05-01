@@ -2,17 +2,104 @@
 
 include 'db.php';
 session_start();
+$ID= $_SESSION['ID'];
  try{
+    //すべて取ってくる処理
+        $sql_ALL=$db->prepare("SELECT p.pname, e.emp_no,e.ename,e.emp,s.safety FROM safety as s left join employee as e on s.safe_no = e.emp_no left join position as p on e.position = p.position_no");
+        $sql_ALL->execute();
+        $ALLusere=$sql_ALL->fetchall();
 
         //IDだけをとってくる処理
-        $sql_ID=db->prepare("SELECT user_id FROM user");
-        $sql_ID->execute();
-        $ALLID=$sql_ID->fetchall();
+        // $sql_ID=db->prepare("SELECT emp_no FROM employee");
+        // $sql_ID->execute();
+        // $ALLID=$sql_ID->fetchall();
+
+
 
     }
     catch(PDOException $e){
         echo 'DBエラー';
     }
+if(isset($_GET["sumitButton"])){
+ try{
+    //全ての安否情報の値を初期値の１にする
+        $sql_update=$db->prepare("update safety  set safety = 1");
+        $sql_update->execute();
+        
+
+        //IDだけをとってくる処理
+        // $sql_ID=db->prepare("SELECT emp_no FROM employee");
+        // $sql_ID->execute();
+        // $ALLID=$sql_ID->fetchall();
+
+
+
+    }
+    catch(PDOException $e){
+        echo 'DBエラー';
+    }
+}
+if(isset($_GET["syousaiButton"])){
+    $_SESSION['syousaiID']=$ID;
+     header('Location: syousai.php');
+     exit;
+}
+
+//追加機能インサート分
+if(isset($_GET["submitTuika"])){
+    // $_SESSION['syousaiID']=$ID;
+    //  header('Location: syousai.php');
+    //  exit;
+$emp_no = $_POST['emp_no'];
+$password = $_POST['password_hash'];
+$ename = $_POST['ename'];
+$birthday = $_POST['birthday'];
+$tel = $_POST['tel'];
+$address = $_POST['address'];
+$position = $_POST['position'];
+$section= $_POST['section'];
+$jname= $_POST['jname'];
+$pname= $_POST['pname'];
+
+if(!empty($emp_no) && !empty($password) &&!empty($ename) &&!empty($birthday) &&!empty($tel) &&!empty($address) &&!empty($position) && !empty($section) && !empty($pname)&& !empty($jname)){
+try{
+
+$password_hash =$password_hash($password);
+
+      $sql_in=$db->prepare("insert into employee (emp_no,password_hash,ename,birthday,tel,address,position,section) values (:emp_no,:password_hash,:ename,:birthday,:tel,:address,:position,:section)");
+
+ $sql_in->execute([
+                ':emp_no' => $emp_no,
+                ':password_hash' =>$password_hash,
+                ':ename' =>$ename,
+                ':birthday' => $birthday,
+                ':tel' => $tel ,
+                ':address' =>$address,
+                ':position' =>$position,
+                ':section' =>$section
+
+        ]);
+
+             $sql_j=$db->prepare("insert into position (pname) values (:pname");
+            $sql_p->execute([
+                ':pname' => $pname
+            ]);
+
+            $sql_j=$db->prepare("insert into section (jname) values (:jname");
+            $sql_j->execute([
+                ':jname' => $jname
+            ]);
+
+       
+        $db->commit();
+}catch(PDOException $e){
+    
+ echo 'DBエラー'.$e ->getMessage();
+
+}
+}
+
+}
 
 
 
@@ -27,32 +114,66 @@ session_start();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
-<body>
 
 
-<?php foreach ($ALLID as $ID):?>
+<!-- 一覧情報 -->
+ <form method="get" action="itiran.php">
+<?php foreach ($ALLusere['emp_no'] as $ID):?>
 
- <p><?php echo $ID ?></p><br>  
-
+<button type="submit" name="syousaiButton"> 
+<p><?php $ID['safety']?><?php echo $ID['emp_no'] ?><?php echo $ID['ename']?><?php echo $ID['pname']?>></p><br>  
+</button>
  <?php endforeach;?>
+</form>
 
 
-//この処理は詳細データが表示された画面で、 userがクリックされたら走る
-// include 'db.php';
-// session_start();
-//
-//
-//クリックしたそのuserのIDを保存
-//
-//$input_syousai=クリックしたそのuserのID
-//~~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~
-//if(!empty($input_syousai))
-// $_SESSION['syousaiID']=$input_syousai;
-// header('Location: $syousai.php');
-// exit;
+
+<!-- 全安否情報の初期化 -->
+<div>
+    <button type="button" id="openhennsyuuBtn">編集</button>
+</div>
+
+ <dialog id="dialogallsadel">
+
+    <form method="get" action="itiran.php">
+
+    <button type="button" name="submitButton">安否情報の初期化</button>
+     <button type="button" id="closeModeBtn">キャンセル</button>
+    </form>
+ </dialog>
+
+
+
+
+
+ <!-- 追加ボタン -->
+
+<div>
+    <button type="button" id="opentuikaBtn">＋追加</button>
+</div>
+
+
+  <dialog id="dialogtuika">
+
+    <form method="post" action="itiran.php">
+ 
+
+    名前: <input type="text" name="ename" required><br>
+    住所:<input type="text" name="address" required><br>
+    ID: <input type="text" name="emp_no" required><br>
+    電話番号: <input type="number" name="tel" required><br>
+    生年月日: <input type="text" name="birhday" required><br>
+    役職番号: <in番号t type="number" name="pname" required><br>
+    役職名: <input type="text" name="position" required><br>
+    部署番号: <input type="number" name="section" required><br>
+      部署名: <input type="text" name="jname" required><br>
+    パスワード: <input type="text" name="password_hash" required><br>
+
+    <button type="button" name="submitTuika">決定</button>
+     <button type="button" id="closeModeBtn">キャンセル</button>
+    </form>
+ </dialog>
+
 </body>
 </html>
 

@@ -69,14 +69,21 @@ button {
  }
 /* 社員としてボタンのホバー時 */
 button[value="login"] {
-   margin-top: 50px;
-  background-color: #b7b943;
+  margin-top: 50px;
+  background-color: #4CAF50;
   border: 9px solid transparent;
 }
+button:hover[value="login"]{
+  background-color: #a2daa4;
+}
 
-/*adminとしてログイン*/
+
+/* adminとしてログイン
 button[value="admin"]{
   margin-top: 20px;
   background-color: #181313;
   border: 10px solid transparent;
 }
+button:hover[value="admin"]{
+  background-color: #616461;
+} */
