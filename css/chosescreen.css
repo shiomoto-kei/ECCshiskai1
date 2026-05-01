@@ -1,0 +1,136 @@
+/* 上部レイアウト（シャドウボックス内） */
+.top-bar{
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:50px;
+}
+
+/* フォーム全体 */
+.form-box{
+  width:640px;
+  margin:100px auto;
+  padding:60px 120px 120px 120px;
+  background:white;
+  border-radius:20px;
+  box-shadow:0 8px 20px rgba(0,0,0,0.1);
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+/* 三本線メニューボタン */
+.menu-btn{
+  font-size:35px;
+  background:none;
+  border:none;
+  cursor:pointer;
+}
+
+/* ログアウトボタン */
+.logout-btn{
+  padding:12px 20px;
+  background:black;
+  color:white;
+  border:none;
+  border-radius:10px;
+}
+
+/* ボタンホバー */
+.logout-btn:hover{
+  background-color:rgb(228,27,27);
+}
+
+/* タイトル */
+h1{
+  font-size:50px;
+  color:#333;
+  margin-bottom:40px;
+  text-align:center;
+}
+
+/* 質問文 */
+.question{
+  font-size:30px;
+  font-weight:bold;
+  margin-bottom:50px;
+}
+
+
+/* Yes・No選択 */
+.radio-box{
+  width:100%;
+  padding:18px;
+  border:3px solid #000;
+  border-radius:5px;
+  font-size:28px;
+  text-align:center;
+  margin-bottom:30px;
+  cursor:pointer;
+}
+
+.radio-box:hover{
+  border-color:#03cae4e5;
+}
+
+.radio-box input{
+  width:auto;
+  margin-right:10px;
+}
+
+/* テキスト入力欄 */
+.text-box{
+  width:100%;
+  margin-bottom:30px;
+}
+
+/* メモ入力エリア */
+.text-box textarea{
+  width:100%;
+  height:120px;
+  padding:15px;
+  font-size:20px;
+  border:2px solid #ccc;
+  border-radius:12px;
+  background:#f9f9f9;
+  box-sizing:border-box;
+
+  overflow-y:auto;
+  resize:none;
+}
+
+/* プレースホルダー文字 */
+.text-box textarea::placeholder{
+  color:#888;
+  font-size:18px;
+}
+
+/* ホバー */
+.text-box textarea:hover{
+  border-color:#03cae4e5;
+}
+
+/* 入力中 */
+.text-box textarea:focus{
+  outline:none;
+  border-color:#4CAF50;
+  box-shadow:0 0 8px rgba(76,175,80,0.3);
+  background:white;
+}
+
+/* 送信ボタン */
+button[type="submit"]{
+  width:100%;
+  padding:18px;
+  background:#4CAF50;
+  color:white;
+  font-size:28px;
+  border:none;
+  border-radius:5px;
+  margin-top:30px;
+}
+button[type="submit"]:hover{
+    background-color: #82be85;
+}
