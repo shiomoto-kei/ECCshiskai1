@@ -39,7 +39,7 @@
 }
 
 /* ボタンホバー */
-button:hover{
+.logout-btn:hover{
   background-color:rgb(228,27,27);
 }
 
