@@ -6,8 +6,11 @@
 <title>安否確認</title>
 <link rel="stylesheet" href="./css/chosescreen.css">
 </head>
+
 <body>
-<div class="form-box">
+
+<div class="wrapper">
+  <div class="form-box">
 
     <div class="top-bar">
         <button class="menu-btn">☰</button>
@@ -20,37 +23,34 @@
 
     <h1>安否確認</h1>
 
-<form action="staff.html" method="get" class="form-get"></form>
-    <p class="question">
-        被害に遭われましたか？
-    </p>
+    <form action="staff.html" method="get">
 
-    <label class="radio-box">
-        <input type="radio" name="status">
-        Yes
-    </label>
+        <p class="question">被害に遭われましたか？</p>
 
+        <label class="radio-box">
+            <input type="radio" name="status" value="yes">
+            Yes
+        </label>
 
-    <label class="text-box">
-        <textarea
-            name="text"
-            placeholder="詳細な内容を記入してください"></textarea>
-    </label>
+        <label class="text-box">
+            <textarea name="text_yes"placeholder="詳細な内容を記入してください"></textarea>
+        </label>
 
-    <label class="radio-box">
-        <input type="radio" name="status">
-        No
-    </label>
+        <label class="radio-box">
+            <input type="radio" name="status" value="no">
+            No
+        </label>
 
+        <label class="text-box">
+            <textarea name="text_no"placeholder="詳細な内容を記入してください"></textarea>
+        </label>
 
-    <label class="text-box">
-        <textarea
-            name="text"
-            placeholder="詳細な内容を記入してください"></textarea>
-    </label>
+        <button type="submit">送信</button>
 
-    <button type="submit">送信</button>
-</form>
+    </form>
+
+  </div>
 </div>
+
 </body>
 </html>
