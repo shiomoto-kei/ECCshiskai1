@@ -2,50 +2,55 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>安否確認</title>
 <link rel="stylesheet" href="./css/chosescreen.css">
 </head>
-
 <body>
 
-<div class="form-box">
+<form action="staff.html" method="get" class="form-box">
 
     <div class="top-bar">
-        <!--メニューボタン-->
         <button class="menu-btn">☰</button>
-        <!--ログアウトボタン-->
-        <button class="logout-btn" onclick="location.href='/loginscreen.html'">
-        logout
+
+        <button class="logout-btn"
+            onclick="location.href='loginscreen1.html'">
+            Logout
         </button>
     </div>
 
-    <h1>株式会社の安否確認</h1>
-    <!--被害があった場合押すボタン-->
-    <label class="radio-box">
-        <input type="radio" name="safe">
-        YES
-    </label>
-    <!-- メモ帳 -->
-    <textarea class="memo"
-    placeholder="詳細内容を入力してください"></textarea>
+    <h1>安否確認</h1>
 
+    <p class="question">
+        被害に遭われましたか？
+    </p>
 
-    <!--被害がなかった場合押すボタン-->
     <label class="radio-box">
-        <input type="radio" name="safe">
-        NO
+        <input type="radio" name="status">
+        Yes
     </label>
 
 
+    <label class="text-box">
+        <textarea
+            name="text"
+            placeholder="詳細な内容を記入してください"></textarea>
+    </label>
 
-    <!--メモ帳-->
-    <textarea class="memo"
-    placeholder="詳細内容を入力してください"></textarea>
+    <label class="radio-box">
+        <input type="radio" name="status">
+        No
+    </label>
+
+
+    <label class="text-box">
+        <textarea
+            name="text"
+            placeholder="詳細な内容を記入してください"></textarea>
+    </label>
 
     <button type="submit">送信</button>
-
-</div>
+</form>
 
 </body>
 </html>
