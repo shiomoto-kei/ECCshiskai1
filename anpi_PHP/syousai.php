@@ -1,86 +1,87 @@
 <?php
-
+//syousai.php
 include 'db.php';
 session_start();
-$syousaiID=$_SESSION['syousaiID'];
+$syousaiID = $_SESSION['syousaiID'];
 
- try{
+try {
 
-        //SQL分 [:id]の部分はあとでもらってきたIDが入る
-        $sql=$db->prepare("SELECT * FROM employee WHERE emp_no = :id");
+    //すべて取ってくる処理
+    $sql_ALL = $db->prepare("SELECT e.*, p.pname, s.sname, sa.safety 
+        FROM employee as e 
+        LEFT JOIN safety as sa ON e.emp_no = sa.safe_no 
+        LEFT JOIN position as p ON e.position = p.position_no 
+        LEFT JOIN section as s ON e.section = s.section_no 
+        WHERE e.emp_no = :emp_no");
+    $sql_ALL->execute([':emp_no' => $syousaiID]);
+    $user_ALL = $sql_ALL->fetch();
 
-        
-        //ここでさっきの[:id]に[$syousaiID]が入る
-        $stmt->bindparam(':id',$syousaiID);
-        $stmt->execute();
-        $usersyousai=$stmt->fetchall();
-
-        $sql_posi=$db->prepare("SELECT * FROM position  WHERE position_no = :posi");
-          $stmt->bindparam('posi', $syousaiID['position']);
-        $stmt->execute();
-        $user_posi=$stmt->fetchall();
-
-        
-
-    }
-    catch(PDOException $e){
-        echo 'DBエラー'.$e->getMessage();
-    }
+   
+} catch (PDOException $e) {
+    echo 'DBエラー:' . $e->getMessage();
+}
 
 
-    if(isset($_GET["submitTuika"])){
-    // $_SESSION['syousaiID']=$ID;
-    //  header('Location: syousai.php');
-    //  exit;
-//$emp_no = $_POST['emp_no'];
-$password = $_POST['password_hash'];
-$ename = $_POST['ename'];
-$birthday = $_POST['birthday'];
-$tel = $_POST['tel'];
-$address = $_POST['address'];
-$position = $_POST['position'];
-$section= $_POST['section'];
-$jname= $_POST['jname'];
-$pname= $_POST['pname'];
+if (isset($_POST["submitTuika"])) {
 
-if(!empty($emp_no) && !empty($password) &&!empty($ename) &&!empty($birthday) &&!empty($tel) &&!empty($address) &&!empty($position) && !empty($section) && !empty($pname)&& !empty($jname)){
-try{
+    $password = $_POST['password_hash'];
+    $ename = $_POST['ename'];
+    $birthday = $_POST['birthday'];
+    $tel = $_POST['tel'];
+    $address = $_POST['address'];
+    $position = $_POST['position'];
+    $section = $_POST['section'];
+    $sname = $_POST['sname'];
+    $pname = $_POST['pname'];
 
-$password_hash =$password_hash($password);
+    if (!empty($password) && !empty($ename) && !empty($birthday) && !empty($tel) && !empty($address) && !empty($position) && !empty($section) && !empty($pname) && !empty($sname)) {
+        try {
+            $db->beginTransaction();
+            $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-      $sql_in=$db->prepare("insert into employee (emp_no,password_hash,ename,birthday,tel,address,position,section) values (:emp_no,:password_hash,:ename,:birthday,:tel,:address,:position,:section)");
+            $sql_in = $db->prepare("update employee set password = :password_hash , ename = :ename , birthday = :birthday , tel = :tel , address = :address , position = :position ,section = :section  where emp_no = :emp_no");
 
- $sql_in->execute([
-                ':emp_no' => $emp_no,
-                ':password_hash' =>$password_hash,
-                ':ename' =>$ename,
+            $sql_in->execute([
+                ':emp_no' => $user_ALL['emp_no'],
+                ':password_hash' => $password_hash,
+                ':ename' => $ename,
                 ':birthday' => $birthday,
-                ':tel' => $tel ,
-                ':address' =>$address,
-                ':position' =>$position,
-                ':section' =>$section
+                ':tel' => $tel,
+                ':address' => $address,
+                ':position' => $position,
+                ':section' => $section
 
+            ]);
+
+            $db->commit();
+            header("Location: syousai.php"); // 再読み込みして反映
+
+            exit;
+        } catch (PDOException $e) {
+
+            echo 'DBエラー' . $e->getMessage();
+
+        }
+    }
+
+}
+if (isset($_GET["sakujyoButton"])) {
+    try {
+        $db->beginTransaction();
+        $sql_up = $db->prepare("update employee set IS_DELETED = 1 where emp_no = :emp_no");
+        $sql_up->execute([
+            ':emp_no' => $user_ALL['emp_no']
         ]);
 
-             $sql_j=$db->prepare("insert into position (pname) values (:pname");
-            $sql_p->execute([
-                ':pname' => $pname
-            ]);
-
-            $sql_j=$db->prepare("insert into section (jname) values (:jname");
-            $sql_j->execute([
-                ':jname' => $jname
-            ]);
-
-       
         $db->commit();
-}catch(PDOException $e){
-    
- echo 'DBエラー'.$e ->getMessage();
+        header("Location: syousai.php"); // 再読み込みして反映
 
-}
-}
+        exit;
+    } catch (PDOException $e) {
 
+        echo 'DBエラー' . $e->getMessage();
+
+    }
 }
 
 
@@ -90,80 +91,68 @@ $password_hash =$password_hash($password);
 
 <!DOCTYPE html>
 <html lang="ja">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+
 <body>
 
-<!-- 全安否情報の初期化 -->
-<div>
-    <button type="button" id="hennsyuuBton">編集</button>
-</div>
+    <!-- 社員情報編集 -->
+    <div>
+        <button type="button" id="hennsyuuBton">編集</button>
+    </div>
+    <dialog id="dialoghennsyuu">
+        <form method="POST" action="syousai.php">
+            社員番号: <?php echo $user_ALL['emp_no'] ?><br>
+            名前: <input type="text" name="ename" required><br>
+            住所:<input type="text" name="address" required><br>
+            電話番号: <input type="number" name="tel" required><br>
+            生年月日: <input type="date" name="birthday" required><br>
+            役職番号: <input type="number" name="position" required><br>
+            役職名: <input type="text" name="pname" required><br>
+            部署番号: <input type="number" name="section" required><br>
+            部署名: <input type="text" name="sname" required><br>
+            パスワード: <input type="text" name="password_hash" required><br>
 
- <dialog id="dialoghennsyuu">
-    <?php echo $syousaiID['emp_no'] ?><br>
-    名前: <input type="text" name="ename" required><br>
-    住所:<input type="text" name="address" required><br>
-    電話番号: <input type="number" name="tel" required><br>
-    生年月日: <input type="text" name="birhday" required><br>
-    役職番号: <in番号t type="number" name="pname" required><br>
-    役職名: <input type="text" name="position" required><br>
-    部署番号: <input type="number" name="section" required><br>
-      部署名: <input type="text" name="jname" required><br>
-    パスワード: <input type="text" name="password_hash" required><br>
+            <button type="submit" name="submitTuika">決定</button>
+            <button type="button" id="closeModeBtn">キャンセル</button>
+        </form>
 
-    <button type="button" name="submitTuika">決定</button>
-     <button type="button" id="closeModeBtn">キャンセル</button>
+        <form method="get" action="syousai.php">
+            <button type="submit" name="sakujyoButton">削除</button>
+        </form>
 
+    </dialog>
 
-    <form method="get" action="syousai.php">
-    <button type="button" name="sakujyoButton">削除</button>
-     <button type="button" id="closeModeBtn">キャンセル</button>
-    </form>
+    <?php if (!empty($syousaiID)): ?>
+        <table border="1">
+            <tr>
+                <th>社員番号</th>
+                <th>名前</th>
+                <th>生年月日</th>
+                <th>電話番号</th>
+                <th>住所</th>
+                <th>役職名</th>
+                <th>部署名</th>
+                <th>画像パス</th>
+            </tr>
+            <tr>
+                <td><?php echo $user_ALL['emp_no'] ?></td>
+                <td><?php echo $user_ALL['password'] ?></td>
+                <td><?php echo $user_ALL['ename'] ?></td>
+                <td><?php echo $user_ALL['birthday'] ?></td>
+                <td><?php echo $user_ALL['tel'] ?></td>
+                <td><?php echo $user_ALL['address'] ?></td>
+                <td><?php echo $user_ALL['pname'] ?></td>
+                <td><?php echo $user_ALL['section'] ?></td>
+                <td><?php echo $user_ALL['image_path'] ?></td>
+            </tr>
+        </table>
+    <?php endif; ?>
 
- </dialog>
-
- <?php if (!empty($syousaiID)): ?>
-<tr>
-    <td><?php echo $syousaiID['emp_no'] ?></td> 
-    <td><?php echo $syousaiID['password_hash'] ?></td> 
-    <td><?php echo $syousaiID['ename'] ?></td> 
-    <td><?php echo $syousaiID['birthday'] ?></td> 
-    <td><?php echo $syousaiID['tel'] ?></td> 
-    <td><?php echo $syousaiID['address'] ?></td> 
-    <td><?php echo $user_posi['pname'] ?></td>
-    <td><?php echo $syousaiID['section'] ?></td>
-    <td><?php echo $syousaiID['image_path'] ?></td>
-   
-</tr>
-<?php endif; ?>
-
-
-//この処理は詳細データが表示された画面で、 userがクリックされたら走る
-// include 'db.php';
-// session_start();
-//
-//
-//クリックしたそのuserのIDを保存
-//
-//$input_syousai=クリックしたそのuserのID
-//~~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~
-// ~~~~~~~~~~~~~
-//if(!empty($input_syousai))
-// $_SESSION['syousaiID']=$input_syousai;
-// header('Location: $syousai.php');
-// exit;
 </body>
+
 </html>
-
-
-
-
-
-
-
-
