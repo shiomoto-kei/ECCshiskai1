@@ -151,7 +151,7 @@ if (isset($_GET["sakujyoButton"])) {
                 <td><?php echo $user_ALL['tel'] ?></td>
                 <td><?php echo $user_ALL['address'] ?></td>
                 <td><?php echo $user_ALL['pname'] ?></td>
-                <td><?php echo $user_ALL['section'] ?></td>
+                <td><?php echo $user_ALL['sname'] ?></td>
                 <td><?php echo $user_ALL['image_path'] ?></td>
             </tr>
         </table>
