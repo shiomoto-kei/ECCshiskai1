@@ -1,0 +1,58 @@
+body{
+    font-size: 14px;
+    background-color: whitesmoke;
+}
+header{
+    text-align: center;
+    padding-bottom: 0px;
+}
+.container{
+    display: flex;
+    flex-wrap: wrap;
+}
+#id{
+    max-width: 100%;
+}
+.head{
+    background-color: rgb(147, 203, 62);
+}
+h1{
+    font-size: 50px;
+    padding-top: 0px;
+}
+table, th, td{
+    border: 2px solid black;
+    margin: 8px;
+    padding: 12px;
+    font-size: 20px;
+    border-collapse: collapse;
+}
+button{
+    font-size: 15px;
+    border:1px solid black;
+    border-radius: 10px;
+    color:white;
+    background-color:black;
+    margin: 5px;
+    padding:10px;
+    text-align:right;
+}
+
+button:hover{
+    background-color: rgb(228, 27, 27);
+}
+.logout{
+    text-align:right;
+}
+#statue{
+    border:none;
+    text-align: center;
+    border-radius: 5px;
+    font-size: 25px;
+    background-color: blue;
+    color:white;
+}
+
+footer{
+    text-align: right;
+}
