@@ -85,6 +85,7 @@ if (isset($_GET["sakujyoButton"])) {
 
         echo 'DBエラー' . $e->getMessage();
 
+        
     }
 }
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
