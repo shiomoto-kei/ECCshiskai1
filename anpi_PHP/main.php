@@ -20,6 +20,7 @@ try {
     if($_SERVER['push'] ==='host'){
     }
     
+    
     //SQL実行結果の処理
     $stmt = $db ->prepare($sql . $where);
 
