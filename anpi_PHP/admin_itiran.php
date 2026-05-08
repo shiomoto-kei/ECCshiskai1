@@ -3,6 +3,7 @@
 include 'db.php';
 session_start();
 $ID = $_SESSION['ID'] ?? "";
+$ALLusere[]="";
 if(empty($ID)){
     echo "IDがありません"; 
 }else{
@@ -10,7 +11,7 @@ try {
     //すべて取ってくる処理
     $sql_ALL = $db->prepare("SELECT p.pname, e.emp_no,e.ename,e.emp,sa.safety FROM employee as e left join  safety as sa on  e.emp_no = sa.safe_no left join position as p on e.position = p.position_no left join section as s on e.section = s.section_no where IS_DELETED = 0");
     $sql_ALL->execute();
-    $ALLusere = $sql_ALL->fetchall();
+    $ALLusere[] = $sql_ALL->fetchall();
  
  
  
