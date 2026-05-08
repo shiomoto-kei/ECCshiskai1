@@ -13,7 +13,7 @@ if(!empty($input_id) && !empty($input_pass)){
     try{
 
         //SQL分 [:id]の部分はあとでもらってきたIDが入る
-        $sql=db->prepare("SELECT * FROM username WHERE id = :id");
+        $sql=$db->prepare("SELECT * FROM username WHERE id = :id");
          
         //ここでさっきの[:id]に[$input_id]が入る
         $stmt->bindparam(':id',$input_id);
