@@ -83,8 +83,11 @@ if (isset($_GET["sakujyoButton"])) {
  
     }
 }
- 
- 
+if($_SERVER['logout-btn']==='POST'){
+    if(isset($_POST['logout'])){
+        $value == null;
+    }
+}
  
 ?>
  
