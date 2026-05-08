@@ -2,28 +2,31 @@
 //syousai.php
 include 'db.php';
 session_start();
-$syousaiID = $_SESSION['syousaiID'];
- 
-try {
- 
-    //すべて取ってくる処理
-    $sql_ALL = $db->prepare("SELECT e.*, p.pname, s.sname, sa.safety
+$syousaiID = $_SESSION['syousaiID'] ?? "";
+if (empty($ID)) {
+    echo "IDがありません"; 
+} else {
+    try {
+
+        //すべて取ってくる処理
+        $sql_ALL = $db->prepare("SELECT e.*, p.pname, s.sname, sa.safety
         FROM employee as e
         LEFT JOIN safety as sa ON e.emp_no = sa.safe_no
         LEFT JOIN position as p ON e.position = p.position_no
         LEFT JOIN section as s ON e.section = s.section_no
         WHERE e.emp_no = :emp_no");
-    $sql_ALL->execute([':emp_no' => $syousaiID]);
-    $user_ALL = $sql_ALL->fetch();
- 
-   
-} catch (PDOException $e) {
-    echo 'DBエラー:' . $e->getMessage();
+        $sql_ALL->execute([':emp_no' => $syousaiID]);
+        $user_ALL = $sql_ALL->fetch();
+
+
+    } catch (PDOException $e) {
+        echo 'DBエラー:' . $e->getMessage();
+    }
 }
- 
- 
+
+
 if (isset($_POST["submitTuika"])) {
- 
+
     $password = $_POST['password_hash'];
     $ename = $_POST['ename'];
     $birthday = $_POST['birthday'];
@@ -33,14 +36,14 @@ if (isset($_POST["submitTuika"])) {
     $section = $_POST['section'];
     $sname = $_POST['sname'];
     $pname = $_POST['pname'];
- 
+
     if (!empty($password) && !empty($ename) && !empty($birthday) && !empty($tel) && !empty($address) && !empty($position) && !empty($section) && !empty($pname) && !empty($sname)) {
         try {
             $db->beginTransaction();
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
- 
+
             $sql_in = $db->prepare("update employee set password = :password_hash , ename = :ename , birthday = :birthday , tel = :tel , address = :address , position = :position ,section = :section  where emp_no = :emp_no");
- 
+
             $sql_in->execute([
                 ':emp_no' => $user_ALL['emp_no'],
                 ':password_hash' => $password_hash,
@@ -50,20 +53,20 @@ if (isset($_POST["submitTuika"])) {
                 ':address' => $address,
                 ':position' => $position,
                 ':section' => $section
- 
+
             ]);
- 
+
             $db->commit();
             header("Location: syousai.php"); // 再読み込みして反映
- 
+
             exit;
         } catch (PDOException $e) {
- 
+
             echo 'DBエラー' . $e->getMessage();
- 
+
         }
     }
- 
+
 }
 if (isset($_GET["sakujyoButton"])) {
     try {
@@ -72,37 +75,37 @@ if (isset($_GET["sakujyoButton"])) {
         $sql_up->execute([
             ':emp_no' => $user_ALL['emp_no']
         ]);
- 
+
         $db->commit();
         header("Location: syousai.php"); // 再読み込みして反映
- 
+
         exit;
     } catch (PDOException $e) {
- 
+
         echo 'DBエラー' . $e->getMessage();
- 
+
     }
 }
-if($_SERVER['logout-btn']==='POST'){
-    if(isset($_POST['logout'])){
+if ($_SERVER['logout-btn'] === 'POST') {
+    if (isset($_POST['logout'])) {
         $value == null;
     }
 }
- 
+
 ?>
- 
- 
+
+
 <!DOCTYPE html>
 <html lang="ja">
- 
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
- 
+
 <body>
- 
+
     <?php if (!empty($syousaiID)): ?>
         <table border="1">
             <tr>
@@ -128,7 +131,7 @@ if($_SERVER['logout-btn']==='POST'){
             </tr>
         </table>
     <?php endif; ?>
-<script src="syousai.js"></script>
+    <script src="syousai.js"></script>
 </body>
- 
+
 </html>
