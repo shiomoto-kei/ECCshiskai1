@@ -2,8 +2,11 @@
 //syousai.php
 include 'db.php';
 session_start();
-$syousaiID = $_SESSION['syousaiID'];
+$syousaiID = $_SESSION['syousaiID'] ??"";
  
+if(empty($syousaiID)){
+    echo "IDがありません"; 
+}else{
 try {
  
     //すべて取ってくる処理
@@ -19,6 +22,7 @@ try {
    
 } catch (PDOException $e) {
     echo 'DBエラー:' . $e->getMessage();
+}
 }
  
  
