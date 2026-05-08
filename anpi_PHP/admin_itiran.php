@@ -2,7 +2,10 @@
 // itiran.php
 include 'db.php';
 session_start();
-$ID = $_SESSION['ID'];
+$ID = $_SESSION['ID'] ?? "";
+if(empty($ID)){
+    echo "IDがありません"; 
+}else{
 try {
     //すべて取ってくる処理
     $sql_ALL = $db->prepare("SELECT p.pname, e.emp_no,e.ename,e.emp,sa.safety FROM employee as e left join  safety as sa on  e.emp_no = sa.safe_no left join position as p on e.position = p.position_no left join section as s on e.section = s.section_no where IS_DELETED = 0");
@@ -15,6 +18,7 @@ try {
  
 } catch (PDOException $e) {
     echo 'DBエラー';
+}
 }
 // 安否情報の初期化
 if (isset($_GET["submitButton"])) {
@@ -31,6 +35,7 @@ if (isset($_GET["submitButton"])) {
         echo 'DBエラー';
     }
 }
+
 // 詳細画面への遷移
 if (isset($_POST["syousaiButton"])) {
     $_SESSION['syousaiID'] = $_POST['syousaiButton'];
