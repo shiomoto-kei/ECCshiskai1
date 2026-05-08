@@ -6,8 +6,8 @@ body {
 
   /* 画面中央に配置（重要） */
   display: flex;
-  /* justify-content: center;
-  align-items: center; */
+  justify-content: center;
+  /* align-items: center; */
   min-height: 100vh;
 }
 
