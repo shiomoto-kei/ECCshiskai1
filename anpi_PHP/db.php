@@ -1,15 +1,15 @@
 <?php
-$host = "dummy"; //user(ユーザー)
-$dbname = "dummy1";//dbname(データベース名)
-$user = "dummy2";//username(ユーザー名)
-$pass = "dummy3";//password(パスワード)
+$host = "localhost"; //MySQL(サーバー)
+$dbname = "safety_system_db";//dbname(データベース名)
+$user = "root";//username(ユーザー名)
+$pass = "root";//password(パスワード)
 
 try {
     //mysqlに接続(PDO)
     $db = new PDO(
         "mysql:host=$host;dname=$dname;charset=utf8",
-        $dummy3,//MYSQLのusername(ユーザー名)
-        $dummy4//password(パスワード)
+        $root,//MYSQLのusername(ユーザー名)
+        $root//password(パスワード)
     );
 
     //エラー時に例外を投げる設定
