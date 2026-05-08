@@ -13,12 +13,13 @@ try {
         }else if($search == 2){
             $where = " where /SAFETY/ = serach";
         }
-    }catch(PDOException $dummy){
-        $dummy -> getMessage();
+    }catch(PDOException $stmt){
+        $stmt -> getMessage();
     }
 
     if($_SERVER['push'] ==='host'){
     }
+    
     
     //SQL実行結果の処理
     $stmt = $db ->prepare($sql . $where);
@@ -38,7 +39,7 @@ try {
     $SAFETY = $row ? $row['SAFETY'] : 'データなし';
     
     //実行結果の更新
-    $dummy = "UPDATE /*安否表のdbuser名*/ SET /*安否表のdbのテーブル名*/ SAFETY where id/*安否表の変数id*/ :";
+    $push = "UPDATE /*安否表のdbuser名*/ safety_system_db SET /*安否表のdbのテーブル名*/ SAFETY where SAFETY/*安否表の変数id*/ SAFE_NO:";
     
     $stmt ->execute();
 
