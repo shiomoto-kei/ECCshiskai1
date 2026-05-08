@@ -1,17 +1,17 @@
 <?php
 include 'db.php';
 
-$search = filter_input(INPUT_GET,/*ボタンの変数 */"dummy");
+$search = filter_input(INPUT_GET,/*ボタンの変数 */ "radio-box");
 $push = filter_input(INPUT_GET,"host");
 try {
     //SQL分実行
-    $sql = "SELECT * FROM /*テーブルの変数*/dummy2";
+    $sql = "SELECT * FROM /*テーブルの変数*/SAFETY";
     $where = "";
     try{
          if($search == 1){
-            $where = " where /*安否表*/ = serach";
+            $where = " where /SAFETY/ = serach";
         }else if($search == 2){
-            $where = " where /*安否表*/ = serach";
+            $where = " where /SAFETY/ = serach";
         }
     }catch(PDOException $dummy){
         $dummy -> getMessage();
@@ -24,9 +24,9 @@ try {
     $stmt = $db ->prepare($sql . $where);
 
     if($search == 1){
-        $stmt -> bindParam('dummy' , $search, PDO::PARAM_INT);
+        $stmt -> bindParam('SAFETY' , $search, PDO::PARAM_INT);
     }else if($search == 2){
-        $stmt -> bindParam('dummy' , $search, PDO::PARAM_INT);
+        $stmt -> bindParam('SAFETY' , $search, PDO::PARAM_INT);
     }
 
     $push = $db->prepare("SELECT E.ENAME, S.SAFETY FROM EMPLOYEE AS E
@@ -38,7 +38,7 @@ try {
     $SAFETY = $row ? $row['SAFETY'] : 'データなし';
     
     //実行結果の更新
-    $dummy = "UPDATE /*安否表のdbuser名*/ SET /*安否表のdbのテーブル名*/ where id/*安否表の変数id*/ :";
+    $dummy = "UPDATE /*安否表のdbuser名*/ SET /*安否表のdbのテーブル名*/ SAFETY where id/*安否表の変数id*/ :";
     
     $stmt ->execute();
 
