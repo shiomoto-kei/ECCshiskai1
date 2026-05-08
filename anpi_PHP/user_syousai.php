@@ -3,8 +3,9 @@
 include 'db.php';
 session_start();
 $syousaiID = $_SESSION['syousaiID'] ?? "";
-if (empty($ID)) {
-    echo "IDがありません"; 
+
+if (empty($syousaiID)) {
+    echo "IDがありません";
 } else {
     try {
 
@@ -86,7 +87,7 @@ if (isset($_GET["sakujyoButton"])) {
 
     }
 }
-if ($_SERVER['logout-btn'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['logout'])) {
         $value == null;
     }
@@ -120,13 +121,12 @@ if ($_SERVER['logout-btn'] === 'POST') {
             </tr>
             <tr>
                 <td><?php echo $user_ALL['emp_no'] ?></td>
-                <td><?php echo $user_ALL['password'] ?></td>
                 <td><?php echo $user_ALL['ename'] ?></td>
                 <td><?php echo $user_ALL['birthday'] ?></td>
                 <td><?php echo $user_ALL['tel'] ?></td>
                 <td><?php echo $user_ALL['address'] ?></td>
                 <td><?php echo $user_ALL['pname'] ?></td>
-                <td><?php echo $user_ALL['section'] ?></td>
+                <td><?php echo $user_ALL['sname'] ?></td>
                 <td><?php echo $user_ALL['image_path'] ?></td>
             </tr>
         </table>
