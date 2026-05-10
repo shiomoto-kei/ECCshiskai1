@@ -7,7 +7,7 @@ $pass = "root";//password(パスワード)
 try {
     //mysqlに接続(PDO)
     $db = new PDO(
-        "mysql:host=$host;dname=$dbname;charset=utf8",
+        "mysql:host=$host;dbname=$dbname;charset=utf8",
         $user,//MYSQLのusername(ユーザー名)
         $pass//password(パスワード)
     );
