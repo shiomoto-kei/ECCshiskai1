@@ -24,8 +24,8 @@ if(!empty($input_id) && !empty($input_pass)){
             if(password_verify($input_pass,$userid['password'])){
 
 
-         $hash =password_hash($input_pass);  
-if($user['emp_no']==$inpot_id && $user['password_hash']===$hash)
+        $hash = password_hash($input_pass);  
+        if($user['emp_no']==$input_id && $user['password_hash']===$hash)
             //もし管理者IDだったら遷移先を変更
                 if($user['position']===1){
                     $_SESSION['ID']=$user['emp_no'];
