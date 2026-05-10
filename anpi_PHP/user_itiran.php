@@ -2,12 +2,20 @@
 // itiran.php
 include 'db.php';
 session_start();
-$ID = $_SESSION['ID'];
+$syousaiID = $_SESSION['syousaiID'] ?? "";
+$ALLusere = [];
+
 try {
     //すべて取ってくる処理
-    $sql_ALL = $db->prepare("SELECT p.pname, e.emp_no,e.ename,e.emp,sa.safety FROM employee as e left join  safety as sa on  e.emp_no = sa.safe_no left join position as p on e.position = p.position_no left join section as s on e.section = s.section_no where IS_DELETED = 0");
+    $sql_ALL = $db->prepare("SELECT p.PNAME, e.EMP_NO, e.ENAME, sa.SAFETY 
+    FROM EMPLOYEE as e 
+    LEFT JOIN SAFETY as sa ON e.EMP_NO = sa.SAFE_NO 
+    LEFT JOIN E_POSITION as p ON e.E_POSITION = p.POSITION_NO 
+    LEFT JOIN SECTION as s ON e.SECTION = s.SECTION_NO 
+    WHERE e.IS_DELETED = 0");
+    // $sql_ALL = $db->prepare("SELECT p.pname, e.emp_no,e.ename,e.emp,sa.safety FROM employee as e left join  safety as sa on  e.emp_no = sa.safe_no left join position as p on e.position = p.position_no left join section as s on e.section = s.section_no where IS_DELETED = 0");
     $sql_ALL->execute();
-    $ALLusere = $sql_ALL->fetchall();
+    $ALLusere = $sql_ALL->fetchAll(PDO::FETCH_ASSOC);
  
  
  
@@ -20,16 +28,10 @@ try {
 // 詳細画面への遷移
 if (isset($_POST["syousaiButton"])) {
     $_SESSION['syousaiID'] = $_POST['syousaiButton'];
-    header('Location: syousai.php');
+    header('Location: user_syousai.php');
     exit;
 }
-
- 
- 
- 
 ?>
- 
- 
  
 <!DOCTYPE html>
 <html lang="ja">
@@ -45,8 +47,12 @@ if (isset($_POST["syousaiButton"])) {
 <form method="POST" action="itiran.php">
     <?php foreach ($ALLusere as $user): ?>
  
-        <button type="submit" name="syousaiButton" value="<?php echo $user['emp_no']; ?>">
-            <p><?php echo $user['safety'] ?><?php echo $user['emp_no'] ?><?php echo $user['ename'] ?><?php echo $user['pname'] ?>></p>
+        <button type="submit" name="syousaiButton" value="<?php echo $user['EMP_NO']; ?>">
+            <p><?php echo htmlspecialchars($user['SAFETY'] ?? '')?>
+                <?php echo htmlspecialchars($user['EMP_NO'] ?? '') ?>
+                <?php echo htmlspecialchars($user['ENAME'] ?? '')?>
+                <?php echo htmlspecialchars($user['PNAME'] ?? '')?>
+            </p>
             <br>
         </button>
     <?php endforeach; ?>
