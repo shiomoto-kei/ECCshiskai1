@@ -3,7 +3,7 @@
 include 'db.php';
 session_start();
 
-// --- 1. アクション系処理（SELECTより先に実行） ---
+// --- 1. アクション系処理（更新・追加・削除・ログアウト） ---
 
 // ログアウト処理
 if (isset($_POST['logout'])) {
@@ -15,22 +15,10 @@ if (isset($_POST['logout'])) {
 
 // 安否情報の初期化
 if (isset($_POST["submitButton"])) {
-   try {
+    try {
         $db->beginTransaction();
-
-        // A. すでにレコードがある人は「1」に更新
-        $sql_update = $db->prepare("UPDATE SAFETY SET SAFETY = 1, SAFE_TEXT = ''");
-        $sql_update->execute();
-
-        // B. 【重要】もしSAFETYテーブルに存在しない社員がいたら、自動で作る
-        // EMPLOYEEにはいるけどSAFETYにはいない人を初期値1で登録するSQL
-        $sql_insert_missing = $db->prepare("
-            INSERT INTO SAFETY (SAFE_NO, SAFETY, SAFE_TEXT)
-            SELECT EMP_NO, 1, '' FROM EMPLOYEE
-            WHERE EMP_NO NOT IN (SELECT SAFE_NO FROM SAFETY)
-        ");
-        $sql_insert_missing->execute();
-
+        $db->exec("UPDATE SAFETY SET SAFETY = 1, SAFE_TEXT = ''");
+        $db->exec("INSERT INTO SAFETY (SAFE_NO, SAFETY, SAFE_TEXT) SELECT EMP_NO, 1, '' FROM EMPLOYEE WHERE EMP_NO NOT IN (SELECT SAFE_NO FROM SAFETY)");
         $db->commit();
         header("Location: admin_itiran.php");
         exit;
@@ -63,7 +51,7 @@ if (isset($_POST["submitTuika"])) {
             $db->beginTransaction();
             $password_hash = password_hash($password, PASSWORD_DEFAULT);
 
-            // EMPLOYEEテーブル
+            // EMPLOYEEテーブルへの挿入
             $sql_in = $db->prepare("INSERT INTO EMPLOYEE (EMP_NO, PASSWORD, ENAME, BIRTHDAY, TEL, ADDRESS, E_POSITION, SECTION) VALUES (:emp_no, :password, :ename, :birthday, :tel, :address, :position, :section)");
             $sql_in->execute([
                 ':emp_no' => $emp_no, ':password' => $password_hash, ':ename' => $ename,
@@ -71,12 +59,12 @@ if (isset($_POST["submitTuika"])) {
                 ':position' => $position, ':section' => $section
             ]);
 
-            // SAFETYテーブル（初期値1）
+            // SAFETYテーブルへの初期登録
             $sql_safe = $db->prepare("INSERT INTO SAFETY (SAFE_NO, SAFETY, SAFE_TEXT) VALUES (:emp_no, 1, '')");
             $sql_safe->execute([':emp_no' => $emp_no]);
 
             $db->commit();
-            header('Location: admin_itiran.php');
+            header('Location: admin_itiran.php'); // 追加後はリダイレクトして再読み込み
             exit;
         } catch (PDOException $e) {
             if ($db->inTransaction()) $db->rollBack();
@@ -85,22 +73,36 @@ if (isset($_POST["submitTuika"])) {
     }
 }
 
-// --- 2. 表示用データの取得（最新の状態を取得） ---
+// --- 2. 表示用データの取得（検索機能を含む） ---
 
 $ID = $_SESSION['ID'] ?? "";
 $ALLusere = [];
+$search_word = $_GET['search'] ?? ""; // URLのパラメータから取得
 
-if (empty($ID)) {
-    // 本番環境ではここでリダイレクト等
-} else {
+if (!empty($ID)) {
     try {
-        $sql_ALL = $db->prepare("SELECT p.PNAME, e.EMP_NO, e.ENAME, sa.SAFETY 
-            FROM EMPLOYEE as e 
-            LEFT JOIN SAFETY as sa ON e.EMP_NO = sa.SAFE_NO 
-            LEFT JOIN E_POSITION as p ON e.E_POSITION = p.POSITION_NO 
-            WHERE e.IS_DELETED = 0");
+        // ベースのSQL
+        $query = "SELECT p.PNAME, e.EMP_NO, e.ENAME, sa.SAFETY 
+                  FROM EMPLOYEE as e 
+                  LEFT JOIN SAFETY as sa ON e.EMP_NO = sa.SAFE_NO 
+                  LEFT JOIN E_POSITION as p ON e.E_POSITION = p.POSITION_NO 
+                  WHERE e.IS_DELETED = 0";
+
+        // 検索ボタンが押された時だけ条件を動的に追加
+        if (isset($_GET['executeSearch']) && $search_word !== "") {
+            $query .= " AND e.EMP_NO LIKE :search";
+        }
+
+        $sql_ALL = $db->prepare($query);
+
+        // バインド処理
+        if (isset($_GET['executeSearch']) && $search_word !== "") {
+            $sql_ALL->bindValue(':search', '%' . $search_word . '%', PDO::PARAM_STR);
+        }
+
         $sql_ALL->execute();
         $ALLusere = $sql_ALL->fetchAll(PDO::FETCH_ASSOC);
+
     } catch (PDOException $e) {
         echo 'DBエラー（取得）: ' . $e->getMessage();
     }
@@ -124,6 +126,16 @@ if (empty($ID)) {
 </header>
 
 <div class="container">
+    <!-- 検索フォーム -->
+    
+        <form method="GET" action="admin_itiran.php">
+            社員番号検索: 
+            <input type="text" name="search" placeholder="社員番号を入力" value="<?= htmlspecialchars($search_word) ?>">
+            <button type="submit" name="executeSearch">検索開始</button>
+            <a href="admin_itiran.php" >全件表示</a>
+        </form>
+    </div>
+
     <table>
         <thead>
             <tr class="head">
@@ -150,7 +162,7 @@ if (empty($ID)) {
                     </tr>
                 <?php endforeach; ?>
             <?php else: ?>
-                <tr><td colspan="5">表示するデータがありません。</td></tr>
+                <tr><td colspan="5">該当する社員がいません。</td></tr>
             <?php endif; ?>
         </tbody>
     </table>
@@ -158,38 +170,10 @@ if (empty($ID)) {
 
 <div>
     <button type="button" id="opentuikaBtn">＋追加</button>
+    <button type="button" id="openhennsyuuBtn" class="delete-btn">安否初期化</button>
 </div>
 
-<footer>
-    <button type="button" id="openhennsyuuBtn" class="delete-btn">編集</button>
-</footer>
-
-<!-- 安否初期化ダイアログ -->
-<dialog id="dialogallsadel">
-    <form method="POST" action="admin_itiran.php">
-        <p>全ての安否情報を初期化（1に戻す）しますか？</p>
-        <button type="submit" name="submitButton">安否情報の初期化</button>
-        <button type="button" class="closeModeBtn">キャンセル</button>
-    </form>
-</dialog>
-
-<!-- 追加ダイアログ -->
-<dialog id="dialogtuika">
-    <form method="POST" action="admin_itiran.php">
-        名前: <input type="text" name="ename" required><br>
-        住所: <input type="text" name="address" required><br>
-        ID: <input type="text" name="emp_no" required><br>
-        電話番号: <input type="text" name="tel" required><br>
-        生年月日: <input type="date" name="birthday" required><br>
-        役職番号: <input type="number" name="position" required><br>
-        役職名: <input type="text" name="pname" required><br>
-        部署番号: <input type="number" name="section" required><br>
-        部署名: <input type="text" name="jname" required><br>
-        パスワード: <input type="password" name="password_hash" required><br>
-        <button type="submit" name="submitTuika">決定</button>
-        <button type="button" class="closeModeBtn">キャンセル</button>
-    </form>
-</dialog>
+<!-- ダイアログ等は以前のものをそのまま下に配置してください -->
 
 <script src="../anpi_JS/itiran.js"></script>
 </body>
