@@ -104,6 +104,7 @@ try {
     </form>
   </div>
 </div>
-
+<script src="./main.js"></script>
+<script src="./dialog.js"></script>
 </body>
 </html>
