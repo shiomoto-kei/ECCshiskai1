@@ -58,7 +58,7 @@ if (isset($_POST["submitTuika"])) {
             ]);
 
             $db->commit();
-            header("Location: syousai.php"); // 再読み込みして反映
+            header("Location: user_syousai.php"); // 再読み込みして反映
 
             exit;
         } catch (PDOException $e) {
