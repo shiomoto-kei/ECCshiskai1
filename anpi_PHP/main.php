@@ -17,7 +17,7 @@ try {
         $stmt -> getMessage();
     }
 
-    if($_SERVER['push'] ==='host'){
+    if($_SERVER ==='push'){
     }
     
     
@@ -34,7 +34,7 @@ try {
                           JOIN SAFETY AS S ON(E.EMP_NO = S.SAFE_NO) 
                           ");
     $push->execute();
-    $row = $ENAME->fetch(PDO::FETCH_ASSOC);
+    $row = $push->fetch(PDO::FETCH_ASSOC);
     //データがない場合
     $SAFETY = $row ? $row['SAFETY'] : 'データなし';
     
@@ -51,3 +51,60 @@ try {
 }catch (PDOException $dummy){
  exit("DBエラー" . $dummy->getMessage());
 }
+?>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>安否確認</title>
+<link rel="stylesheet" href="../css/chosescreen.css">
+</head>
+
+<body>
+
+<div class="wrapper">
+  <div class="form-box">
+
+    <div class="top-bar">
+        <button class="menu-btn">☰</button>
+
+        <button class="logout-btn"
+            onclick="location.href='/loginscreen.html'">
+            Logout
+        </button>
+    </div>
+
+    <h1>安否確認</h1>
+
+    <form action="staff.html" method="get">
+
+        <p class="question">被害に遭われましたか？</p>
+
+        <label class="radio-box">
+            <input type="radio" name="status" value="yes">
+            Yes
+        </label>
+
+        <label class="text-box">
+            <textarea name="text_yes"placeholder="詳細な内容を記入してください"></textarea>
+        </label>
+
+        <label class="radio-box">
+            <input type="radio" name="status" value="no">
+            No
+        </label>
+
+        <label class="text-box">
+            <textarea name="text_no"placeholder="詳細な内容を記入してください"></textarea>
+        </label>
+
+        <button type="submit">送信</button>
+
+    </form>
+
+  </div>
+</div>
+
+</body>
+</html>
