@@ -1,18 +1,23 @@
 document.addEventListener('DOMContentLoaded', () => {
     // 要素の取得
     const dialog = document.getElementById('dialoghennsyuu');
-    const openBtn = document.getElementById('hennsyuuBton');
+    // IDではなく「class="hennsyuuBtn"」を持つ全てのボタンを取得する
+    const openBtns = document.querySelectorAll('.hennsyuuBtn'); 
     const closeBtn = document.getElementById('closeModeBtn');
     const deleteForm = document.querySelector('form[action="syousai.php"][method="get"]');
 
-    // 編集ボタンを押したときにダイアログを開く
-    if (openBtn) {
-        openBtn.addEventListener('click', () => {
-            dialog.showModal();
+    // すべての編集ボタンに対してクリックイベントを設定する
+    if (openBtns.length > 0) {
+        openBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (dialog) {
+                    dialog.showModal();
+                }
+            });
         });
     }
 
-    //キャンセルボタンを押したときにダイアログを閉じる
+    // キャンセルボタンを押したときにダイアログを閉じる
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
             dialog.close();
@@ -30,10 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
     
-    //ダイアログの外側をクリックしたときにも閉じる
-    dialog.addEventListener('click', (event) => {
-        if (event.target === dialog) {
-            dialog.close();
-        }
-    });
+    // ダイアログの外側をクリックしたときにも閉じる
+    if (dialog) {
+        dialog.addEventListener('click', (event) => {
+            if (event.target === dialog) {
+                dialog.close();
+            }
+        });
+    }
 });
