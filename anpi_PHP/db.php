@@ -15,7 +15,7 @@ try {
     //エラー時に例外を投げる設定
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-    echo "MYSQLに接続できました!";
+    echo 'console_log("MYSQLに接続できました!")';
 
 
     //↓↓↓↓二重になってたのでコメントアウトしました↓↓↓↓
