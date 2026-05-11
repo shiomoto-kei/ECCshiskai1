@@ -16,13 +16,6 @@ if (isset($_POST['logout'])) {
     exit;
 }
 
-
-// 詳細画面への遷移
-if (isset($_POST["syousaiButton"])) {
-    $_SESSION['syousaiID'] = $_POST['syousaiButton'];
-    header('Location: user_syousai.php');
-    exit;
-}
 //2. 表示用データの取得（最新の状態を取得）
 $ID = $_SESSION['ID'] ?? "";
 $ALLusere = [];
@@ -86,7 +79,8 @@ if (isset($_POST["syousaiButton"])) {
                 <?php foreach ($ALLusere as $user): ?>
                     <tr>
                         <td>
-                            <form method="POST" action="admin_itiran.php" style="margin:0;">
+                        <!-- ここがadmin_itiran.phpのままだった -->
+                            <form method="POST" action="user_itiran.php" style="margin:0;">
                                 <button type="submit" name="syousaiButton" value="<?= htmlspecialchars($user['EMP_NO']) ?>">詳細</button>
                             </form>
                         </td>
