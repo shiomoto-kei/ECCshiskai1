@@ -30,12 +30,12 @@ if (empty($syousaiID)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>詳細(Admin)</title>
+    <title>社員詳細</title>
     <link rel="stylesheet" href="../css/staff.css">
 </head>
 <body>
     <header>
-        <h1>詳細(Admin)</h1>
+        <h1>社員詳細</h1>
     </header>
 
     <div class="container">
@@ -75,7 +75,7 @@ if (empty($syousaiID)) {
 
     <dialog id="dialoghennsyuu">
         <!-- action を admin_syousai.php に確実に合わせる -->
-        <form method="POST" action="admin_syousai.php">
+        <form method="POST" action="user_syousai.php">
             <h3>社員情報編集</h3>
             <p>社員番号: <?php echo htmlspecialchars($user_ALL['EMP_NO'] ?? ''); ?></p>
 
@@ -99,10 +99,8 @@ if (empty($syousaiID)) {
 
         <hr>
 
-        <form method="GET" action="admin_syousai.php">
+        <form method="GET" action="user_syousai.php">
         </form>
     </dialog>
-
-    <script src="../anpi_JS/syousai.js"></script>
 </body>
 </html>
