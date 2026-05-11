@@ -1,48 +1,40 @@
 document.addEventListener('DOMContentLoaded', () => {
     // ダイアログ要素の取得
-    const dialogSa = document.getElementById('dialogallsadel'); // 初期化用
-    const dialogTuika = document.getElementById('dialogtuika');   // 追加用
+    const dialogSa = document.getElementById('dialogallsadel');
+    const dialogTuika = document.getElementById('dialogtuika');
 
-    //開くボタンの取得
-    const openSaBtn = document.getElementById('openhennsyuuBtn'); // 編集（初期化）ボタン
-    const openTuikaBtn = document.getElementById('opentuikaBtn');   // ＋追加ボタン
+    // 開くボタンの取得
+    const openSaBtn = document.getElementById('openhennsyuuBtn');
+    const openTuikaBtn = document.getElementById('opentuikaBtn');
 
-    //キャンセルボタンの取得（全ての「キャンセル」ボタン）
-    //HTML側で id="closeModeBtn" を class="closeModeBtn" に変える
+    // キャンセルボタン（全ての .closeModeBtn を取得）
     const closeBtns = document.querySelectorAll('.closeModeBtn');
 
-    // --- ダイアログを開く処理 ---
-
-    // 安否初期化ダイアログ
-    if (openSaBtn) {
-        openSaBtn.addEventListener('click', () => {
-            dialogSa.showModal();
-        });
+    // --- 開く処理 ---
+    if (openSaBtn && dialogSa) {
+        openSaBtn.addEventListener('click', () => dialogSa.showModal());
     }
 
-    // 新規追加ダイアログ
-    if (openTuikaBtn) {
-        openTuikaBtn.addEventListener('click', () => {
-            dialogTuika.showModal();
-        });
+    if (openTuikaBtn && dialogTuika) {
+        openTuikaBtn.addEventListener('click', () => dialogTuika.showModal());
     }
 
-    // --- ダイアログを閉じる処理 ---
-
-    // 全てのキャンセルボタンに対して閉じる処理を割り当てる
+    // --- 閉じる処理 ---
     closeBtns.forEach(btn => {
         btn.addEventListener('click', () => {
-            dialogSa.close();
-            dialogTuika.close();
+            if (dialogSa.open) dialogSa.close();
+            if (dialogTuika.open) dialogTuika.close();
         });
     });
 
-    // 背景クリックで閉じる（お好みで追加）
+    // 背景クリックで閉じる設定
     [dialogSa, dialogTuika].forEach(dialog => {
-        dialog.addEventListener('click', (event) => {
-            if (event.target === dialog) {
-                dialog.close();
-            }
-        });
+        if (dialog) {
+            dialog.addEventListener('click', (event) => {
+                if (event.target === dialog) {
+                    dialog.close();
+                }
+            });
+        }
     });
 });
