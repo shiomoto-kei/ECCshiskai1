@@ -100,7 +100,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>社員詳細</title>
-    <link rel="stylesheet" href="../css/staff.css">
+    <link rel="stylesheet" href="../css/staffsyousai.css">
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>詳細(Admin)</title>
+    <link rel="stylesheet" href="../css/detail.css">
 </head>
 <body>
     <header>
