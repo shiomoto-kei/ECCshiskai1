@@ -26,7 +26,7 @@ if (!empty($input_id) && !empty($input_pass)) {
                     header('Location: admin_itiran.php');
                     exit;
                 } else {
-                    header('Location: user_itiran.php');
+                    header('Location: main.php');
                     exit;
                 }
             } else {
