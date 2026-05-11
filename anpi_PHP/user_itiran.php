@@ -20,7 +20,7 @@ if (isset($_POST['logout'])) {
 // 詳細画面への遷移
 if (isset($_POST["syousaiButton"])) {
     $_SESSION['syousaiID'] = $_POST['syousaiButton'];
-    header('Location: admin_syousai.php');
+    header('Location: user_syousai.php');
     exit;
 }
 //2. 表示用データの取得（最新の状態を取得）
