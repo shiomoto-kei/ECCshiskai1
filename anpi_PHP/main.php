@@ -9,6 +9,7 @@ if (!isset($_SESSION['ID'])) {
     exit;
 }
 
+
 $login_user = $_SESSION['ID'];
 
 // 2. ログアウト処理
