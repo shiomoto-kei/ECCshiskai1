@@ -20,16 +20,21 @@ if (isset($_POST['logout'])) {
     exit;
 }
 
+
 // 3. 安否情報の更新処理
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_anpi'])) {
     $status = filter_input(INPUT_POST, 'status');
 
-    // ここを修正Yesを1、Noを2にするさっきまで逆になっていた(変更日05/12)
-    $text = ($status === 'yes') ? $_POST['text_yes'] : $_POST['text_no'];
-    $safety_val = ($status === 'yes') ? 1 : 2; 
+    // 修正: 被害に遭った(Yes)を2、無事(No)を1に設定
+    if ($status === 'yes') {
+        $text = $_POST['text_yes'];
+        $safety_val = 2; //被害あり
+    } else {
+        $text = $_POST['text_no'];
+        $safety_val = 1; //無事
+    }
 
     try {
-        
         $sql = "UPDATE SAFETY SET SAFETY = :safety, SAFE_TEXT = :text WHERE SAFE_NO = :emp_no";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':safety', $safety_val, PDO::PARAM_INT);
@@ -43,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_anpi'])) {
         exit("DBエラー: " . $e->getMessage());
     }
 }
+
 
 // 4. 表示用データの取得
 try {
