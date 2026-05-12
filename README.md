@@ -1,3 +1,4 @@
+このREADMEは開いて見てください
 C:.
 │  .env
 │  .gitignore
