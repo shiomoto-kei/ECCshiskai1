@@ -23,12 +23,12 @@ if (isset($_POST['logout'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_anpi'])) {
     $status = filter_input(INPUT_POST, 'status');
 
-    // ★ここを修正：Yesを1、Noを2にする
+    // ここを修正Yesを1、Noを2にするさっきまで逆になっていた(変更日05/12)
     $text = ($status === 'yes') ? $_POST['text_yes'] : $_POST['text_no'];
     $safety_val = ($status === 'yes') ? 1 : 2; 
 
     try {
-        // (中略：前回のINSERT/UPDATE判定ロジックを推奨)
+        
         $sql = "UPDATE SAFETY SET SAFETY = :safety, SAFE_TEXT = :text WHERE SAFE_NO = :emp_no";
         $stmt = $db->prepare($sql);
         $stmt->bindValue(':safety', $safety_val, PDO::PARAM_INT);
@@ -57,69 +57,7 @@ try {
     exit("DBエラー: " . $e->getMessage());
 }
 
-// include 'db.php';
-// session_start();
-// $ID=$_SESSION['ID'];
 
-// if (isset($_POST['submit_anpi'])) {
-
-//     $_SESSION['ID'] = $ID;
-//     header("Location: user_itiran.php");
-//     exit;
-// }
-// // 1. ログインチェック
-// if (!isset($_SESSION['ID'])) {
-//     header("Location: ../loginscreen.html");
-//     exit;
-// }
-
-// $login_user = $_SESSION['ID'];
-
-// // 2. ログアウト処理
-// if (isset($_POST['logout'])) {
-//     $_SESSION = [];
-//     session_destroy();
-//     header("Location: ../loginscreen.html");
-//     exit;
-// }
-
-// // 3. 安否情報の更新処理（POST送信時）
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_anpi'])) {
-//     $status = $_POST['status']; 
-//     $text = ($status === 'yes') ? $_POST['text_yes'] : $_POST['text_no'];
-//     $safety_val = ($status === 'yes') ? 2 : 1; // 1:無事, 2:被害あり
-
-//     try {
-//         $sql = "UPDATE SAFETY SET SAFETY = :safety, SAFE_TEXT = :text WHERE SAFE_NO = :emp_no";
-//         $stmt = $db->prepare($sql);
-//         $stmt->bindValue(':safety', $safety_val, PDO::PARAM_INT);
-//         $stmt->bindValue(':text', $text, PDO::PARAM_STR);
-//         $stmt->bindValue(':emp_no', $login_user, PDO::PARAM_STR);
-//         $stmt->execute();
-
-//         header("Location: " . $_SERVER['PHP_SELF']);
-//         exit;
-//     } catch (PDOException $e) {
-//         exit("DBエラー: " . $e->getMessage());
-//     }
-// }
-
-// // 4. 表示用データの取得
-// try {
-//     // 自分の情報を取得
-//     $push = $db->prepare("SELECT ENAME FROM EMPLOYEE WHERE EMP_NO = ?");
-//     $push->execute([$login_user]);
-//     $row = $push->fetch(PDO::FETCH_ASSOC);
-
-//     // 【追加】全社員の安否状況を取得（ダイアログ用）
-//     $sql_all = "SELECT E.ENAME, S.SAFETY FROM EMPLOYEE AS E 
-//                 LEFT JOIN SAFETY AS S ON E.EMP_NO = S.SAFE_NO 
-//                 WHERE E.IS_DELETED = 0";
-//     $all_staff = $db->query($sql_all)->fetchAll(PDO::FETCH_ASSOC);
-
-// } catch (PDOException $e) {
-//     exit("DBエラー: " . $e->getMessage());
-// }
 ?>
 <!DOCTYPE html>
 <html lang="ja">
@@ -150,7 +88,7 @@ try {
             <h1>安否確認</h1>
             <p>こんにちは、<?= htmlspecialchars($row['ENAME'] ?? 'ゲスト') ?> さん</p>
 
-            <!-- actionを空にして自分自身(PHP)にPOSTするように変更 -->
+            
             <form action="" method="POST">
 
                 <p class="question">被害に遭われましたか？</p>
